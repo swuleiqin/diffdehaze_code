@@ -1,7 +1,6 @@
 # 基于扩散模型的夜间图像去雾方法
 
-[![模型权重](assets/badge-weights.png)](https://pan.baidu.com/s/1BDWfpKiDcCyXJajYSmFfew?pwd=6d3j)
-[![Stable Diffusion 2.1 Base](assets/badge-sd21.png)](https://huggingface.co/sd2-community/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.ckpt)
+<a href="https://pan.baidu.com/s/1BDWfpKiDcCyXJajYSmFfew?pwd=6d3j"><img src="assets/badge-weights.png" alt="模型权重" width="110" height="20"></a> &nbsp; <a href="https://huggingface.co/sd2-community/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.ckpt"><img src="assets/badge-sd21.png" alt="Stable Diffusion 2.1 Base" width="167" height="20"></a>
 
 本仓库提供以下论文的 PyTorch 推理代码。
 
