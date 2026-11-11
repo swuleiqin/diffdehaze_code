@@ -1,7 +1,7 @@
 # 基于扩散模型的夜间图像去雾方法
 
-[![预训练权重](https://img.shields.io/badge/%E9%A2%84%E8%AE%AD%E7%BB%83%E6%9D%83%E9%87%8D-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98-ffd700)](https://pan.baidu.com/s/1BDWfpKiDcCyXJajYSmFfew?pwd=6d3j)
-[![Stable Diffusion 2.1 Base](https://img.shields.io/badge/%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B-Stable%20Diffusion%202.1-1bb41b)](https://huggingface.co/sd2-community/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.ckpt)
+[![模型权重](assets/badge-weights.png)](https://pan.baidu.com/s/1BDWfpKiDcCyXJajYSmFfew?pwd=6d3j)
+[![Stable Diffusion 2.1 Base](assets/badge-sd21.png)](https://huggingface.co/sd2-community/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.ckpt)
 
 本仓库提供以下论文的 PyTorch 推理代码。
 
@@ -9,7 +9,7 @@
 > **作者**<br>
 > **单位**
 
-![夜间图像去雾方法的整体框架](.assets/overview.png)
+![夜间图像去雾方法的整体框架](assets/overview.png)
 
 残差预测器在固定噪声时间步 `t=354` 去除潜空间退化残差，得到清晰潜变量估计。将估计重新加噪到 `t=999` 后，使用 Stable Diffusion 2.1 Base 与 ControlNet 执行 50 步去噪。VAE 解码为 RGB 图像后，ABAM 根据清晰夜景亮度先验筛选并矫正需要提亮的图像。
 
@@ -45,7 +45,7 @@
 
 下载三个任务权重，解压后保留 `weights/` 目录结构。另行下载 Stable Diffusion 2.1 Base 512 的 `v2-1_512-ema-pruned.ckpt`，其中包含推理所需的基础 U-Net、VAE 和 OpenCLIP。ABAM 权重内嵌亮度先验。
 
-![权重一览。残差预测器 residual.pt、ControlNet 与 U-Net LoRA 0012000.pt、ABAM abam.pt 来自百度网盘，Stable Diffusion 2.1 Base 权重来自 Hugging Face。](.assets/checkpoints.png)
+![权重一览。残差预测器 residual.pt、ControlNet 与 U-Net LoRA 0012000.pt、ABAM abam.pt 来自百度网盘，Stable Diffusion 2.1 Base 权重来自 Hugging Face。](assets/checkpoints.png)
 
 [任务权重 · 百度网盘（提取码 6d3j）](https://pan.baidu.com/s/1BDWfpKiDcCyXJajYSmFfew?pwd=6d3j) · [基础模型 · Hugging Face 社区镜像](https://huggingface.co/sd2-community/stable-diffusion-2-1-base/blob/main/v2-1_512-ema-pruned.ckpt)
 
@@ -56,7 +56,7 @@ weights:
   sd: weights/v2-1_512-ema-pruned.ckpt
   residual: weights/residual_stage14_gpt0/checkpoints/residual.pt
   stage2: weights/noise/checkpoints/0012000.pt
-  abam: weights/abam/不能删除multiscale_pixelmax01/checkpoints/abam.pt
+  abam: weights/abam/multiscale_pixelmax01/checkpoints/abam.pt
 ```
 
 ### 第二步　运行测试命令
@@ -71,11 +71,17 @@ ATTN_MODE=sdp python inference.py --input inputs --output results
 
 默认使用 `a nighttime scene` 作为场景描述。可用 `--prompt` 指定整批场景描述，或用 `--caption-csv` 提供逐图描述。CSV 包含 `image_path` 和 `caption` 两列，按文件名主体匹配输入。
 
-代表性去雾结果可查看 [RealNightHaze](.assets/realnighthaze-example.png) 和 [NHRW](.assets/nhrw-example.png)。
+**RealNightHaze 去雾示例**
+
+![RealNightHaze 去雾结果对比](assets/realnighthaze-example.png)
+
+**NHRW 去雾示例**
+
+![NHRW 去雾结果对比](assets/nhrw-example.png)
 
 ### 可选　准备测试数据集
 
-![测试数据集为 RealNightHaze 和 NHRW。](.assets/datasets.png)
+![测试数据集为 RealNightHaze 和 NHRW。](assets/datasets.png)
 
 RealNightHaze 可从 GAPSF 的项目页面获取。将测试图像放入同一目录，通过 `--input` 指定。 [RealNightHaze 数据下载入口](https://github.com/jinyeying/nighttime_dehaze#nighttime-haze-data)
 
@@ -89,11 +95,11 @@ RealNightHaze 可从 GAPSF 的项目页面获取。将测试图像放入同一�
 
 **RealNightHaze**
 
-![RealNightHaze 数据集的八项无参考指标定量对比](.assets/quant-realnighthaze.png)
+![RealNightHaze 数据集的八项无参考指标定量对比](assets/quant-realnighthaze.png)
 
 **NHRW**
 
-![NHRW 数据集的八项无参考指标定量对比](.assets/quant-nhrw.png)
+![NHRW 数据集的八项无参考指标定量对比](assets/quant-nhrw.png)
 
 ## 📜 许可
 
