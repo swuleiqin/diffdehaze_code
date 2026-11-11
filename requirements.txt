@@ -1,0 +1,10 @@
+numpy==1.26.4
+opencv-python-headless==4.9.0.80
+Pillow>=9.5,<12
+PyYAML==6.0.2
+tqdm>=4.66,<5
+einops==0.7.0
+packaging>=23
+ftfy==6.2.0
+regex==2023.12.25
+pytorch-lightning==2.2.1

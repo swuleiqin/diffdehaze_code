@@ -1,0 +1,170 @@
+weights:
+  sd: ''
+  residual: ''
+  stage2: ''
+  abam: ''
+inference:
+  image_folder: inputs
+  caption_csv: ''
+  prompt_suffix: clear nighttime scene,naturally dark sky
+  denoising_steps: 50
+  result_folder: results/stage2
+  prompt: a nighttime scene
+  seed: 231
+  max_side: 768
+  device: cuda:0
+abam:
+  output_folder: results/abam
+  kl_threshold: 0.5
+  force_process_filenames: []
+  mathematical_control:
+    max_gain: 2.0
+    strength: 1.0
+    smoothing_sigma: 5.0
+    black_range:
+    - 0.005
+    - 0.03
+    bright_range:
+    - 0.1
+    - 0.6
+  save_maps: true
+  overwrite: false
+residual:
+  noise_timestep: 354
+  timesteps: 1000
+  progress_schedule: drdd
+  progress_linear_start: 0.0001
+  progress_linear_end: 0.02
+  sampling_steps: 1
+  stage2_start_timestep: 999
+lora:
+  enabled: true
+  scale: 1.0
+  attention:
+    enabled: true
+    rank: 8
+    alpha: 16
+    dropout: 0.0
+    self_attention:
+      enabled: true
+      target_modules:
+      - to_q
+      - to_k
+      - to_v
+      - to_out
+    cross_attention:
+      enabled: true
+      target_modules:
+      - to_q
+      - to_out
+  convolution:
+    enabled: true
+    rank: 4
+    alpha: 8
+    dropout: 0.0
+    target: second_resblock_3x3_conv
+    apply_to_encoder: false
+    apply_to_middle: true
+    apply_to_decoder: true
+model:
+  cldm:
+    target: diffbir.model.cldm.ControlLDM
+    params:
+      latent_scale_factor: 0.18215
+      unet_cfg:
+        use_checkpoint: true
+        image_size: 32
+        in_channels: 4
+        out_channels: 4
+        model_channels: 320
+        attention_resolutions:
+        - 4
+        - 2
+        - 1
+        num_res_blocks: 2
+        channel_mult:
+        - 1
+        - 2
+        - 4
+        - 4
+        num_head_channels: 64
+        use_spatial_transformer: true
+        use_linear_in_transformer: true
+        transformer_depth: 1
+        context_dim: 1024
+        legacy: false
+      vae_cfg:
+        embed_dim: 4
+        ddconfig:
+          double_z: true
+          z_channels: 4
+          resolution: 256
+          in_channels: 3
+          out_ch: 3
+          ch: 128
+          ch_mult:
+          - 1
+          - 2
+          - 4
+          - 4
+          num_res_blocks: 2
+          attn_resolutions: []
+          dropout: 0.0
+      clip_cfg:
+        embed_dim: 1024
+        vision_cfg:
+          image_size: 224
+          layers: 32
+          width: 1280
+          head_width: 80
+          patch_size: 14
+        text_cfg:
+          context_length: 77
+          vocab_size: 49408
+          width: 1024
+          heads: 16
+          layers: 24
+        layer: penultimate
+      controlnet_cfg:
+        use_checkpoint: true
+        image_size: 32
+        in_channels: 4
+        hint_channels: 4
+        model_channels: 320
+        attention_resolutions:
+        - 4
+        - 2
+        - 1
+        num_res_blocks: 2
+        channel_mult:
+        - 1
+        - 2
+        - 4
+        - 4
+        num_head_channels: 64
+        use_spatial_transformer: true
+        use_linear_in_transformer: true
+        transformer_depth: 1
+        context_dim: 1024
+        legacy: false
+  diffusion:
+    target: diffbir.model.Diffusion
+    params:
+      linear_start: 0.00085
+      linear_end: 0.012
+      timesteps: 1000
+  residual_model:
+    target: diffbir.model.residual_unet.LatentResidualUNet
+    params:
+      dim: 64
+      dim_mults:
+      - 1
+      - 2
+      - 4
+      - 8
+      latent_channels: 4
+      condition_channels: 4
+      out_channels: 4
+      resnet_block_groups: 8
+      attention_heads: 4
+      attention_dim_head: 32
