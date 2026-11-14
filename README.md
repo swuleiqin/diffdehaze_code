@@ -55,7 +55,7 @@ weights:
   sd: weights/v2-1_512-ema-pruned.ckpt
   residual: weights/residual_stage14_gpt0/checkpoints/residual.pt
   stage2: weights/noise/checkpoints/0012000.pt
-  abam: weights/abam/multiscale_pixelmax01/checkpoints/abam.pt
+  abam: weights/abam/不能删除multiscale_pixelmax01/checkpoints/abam.pt
 ```
 
 ### 第二步　运行测试命令
@@ -68,7 +68,14 @@ ATTN_MODE=sdp python inference.py --input inputs --output results
 
 最终 PNG 保存在 `results/abam/images/`，VAE 解码的中间图保存在 `results/stage2/`。可用 `--check` 预查输入和权重路径。默认设备为 `cuda:0`。
 
-默认使用 `a nighttime scene` 作为场景描述。可用 `--prompt` 指定整批场景描述，或用 `--caption-csv` 提供逐图描述。CSV 包含 `image_path` 和 `caption` 两列，按文件名主体匹配输入。
+B 版附带 [RealNightHaze](data/RealNightHaze.csv) 的 443 条逐图描述，以及 [NHRW](data/NHRW.csv) 的 150 条逐图描述。使用对应测试集时，通过 `--caption-csv` 选择文件，也可以设置 `configs/inference.yaml` 中的 `inference.caption_csv`。
+
+```bash
+ATTN_MODE=sdp python inference.py --input inputs/RealNightHaze --output results/RealNightHaze --caption-csv data/RealNightHaze.csv
+ATTN_MODE=sdp python inference.py --input inputs/NHRW --output results/NHRW --caption-csv data/NHRW.csv
+```
+
+CSV 包含 `image_path` 和 `caption` 两列，程序按文件名主体匹配图片，忽略目录、扩展名和大小写。推理时将逐图描述与 `clear nighttime scene,naturally dark sky` 拼接。未指定 CSV 时，默认使用 `a nighttime scene` 加相同后缀，也可用 `--prompt` 自定义整批图像的场景描述。
 
 **RealNightHaze 去雾示例**
 
