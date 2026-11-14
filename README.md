@@ -55,7 +55,7 @@ weights:
   sd: weights/v2-1_512-ema-pruned.ckpt
   residual: weights/residual_stage14_gpt0/checkpoints/residual.pt
   stage2: weights/noise/checkpoints/0012000.pt
-  abam: weights/abam/不能删除multiscale_pixelmax01/checkpoints/abam.pt
+  abam: weights/abam/multiscale_pixelmax01/checkpoints/abam.pt
 ```
 
 ### 第二步　运行测试命令
@@ -68,7 +68,7 @@ ATTN_MODE=sdp python inference.py --input inputs --output results
 
 最终 PNG 保存在 `results/abam/images/`，VAE 解码的中间图保存在 `results/stage2/`。可用 `--check` 预查输入和权重路径。默认设备为 `cuda:0`。
 
-B 版附带 [RealNightHaze](data/RealNightHaze.csv) 的 443 条逐图描述，以及 [NHRW](data/NHRW.csv) 的 150 条逐图描述。使用对应测试集时，通过 `--caption-csv` 选择文件，也可以设置 `configs/inference.yaml` 中的 `inference.caption_csv`。
+B 版附带本文生成的 [RealNightHaze](data/RealNightHaze.csv) 的 443 条逐图描述，以及 [NHRW](data/NHRW.csv) 的 150 条逐图描述。使用对应测试集时，通过 `--caption-csv` 选择文件，也可以设置 `configs/inference.yaml` 中的 `inference.caption_csv`。
 
 ```bash
 ATTN_MODE=sdp python inference.py --input inputs/RealNightHaze --output results/RealNightHaze --caption-csv data/RealNightHaze.csv
